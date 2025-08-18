@@ -2,8 +2,7 @@ import {Request, Response} from "express";
 
 export async function handlerValidateChirp(req: Request, res: Response) {
     if (req.body.body.length > 140) {
-        res.status(400).send({ "error": "Chirp is too long"});
-        return;
+        throw new Error("Chirp is too long");
     } 
 
     const words = req.body.body.split(" ");
