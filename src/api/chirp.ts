@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import { BadRequestError } from "./errors.js";
+import { createChirp } from "../db/queries/chirps.js";
 
 export async function handlerChirp(req: Request, res: Response) {
     
@@ -20,5 +21,9 @@ export async function handlerChirp(req: Request, res: Response) {
     }
 
     const filtered = words.join(" ");
-    res.send({ cleanedBody: filtered });
+    const chirp = await createChirp({
+        body: filtered,
+        userId: req.body.userId,
+    });
+    res.status(201).send(chirp);
 }
