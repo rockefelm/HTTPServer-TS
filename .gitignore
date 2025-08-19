@@ -3,3 +3,4 @@
 /dist
 *.sql
 /src/db/meta
+.env
