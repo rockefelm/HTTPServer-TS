@@ -1,5 +1,7 @@
 import { Request, Response} from 'express';
 import { config } from '../config.js'
+import { UserForbiddenError } from './errors.js';
+import { resetUsers } from '../db/queries/users.js';
 
 export function handlerServerHits(req: Request, res: Response) {
     res.set('Content-Type', 'text/html; charset=utf-8');
@@ -12,9 +14,4 @@ export function handlerServerHits(req: Request, res: Response) {
         </html>
     `);
     res.end()
-}
-
-export function handlerServerHitsReset(req: Request, res: Response) {
-    config.api.fileServerHits = 0;
-    res.send("Server Hits Reset");
 }

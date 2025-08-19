@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import { BadRequestError } from "./errors.js";
 
-export async function handlerValidateChirp(req: Request, res: Response) {
+export async function handlerChirp(req: Request, res: Response) {
     
     const maxChirpLength = 140;
     if (req.body.body.length > maxChirpLength) {

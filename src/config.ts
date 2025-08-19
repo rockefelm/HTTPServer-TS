@@ -8,7 +8,9 @@ const migrationConfig: MigrationConfig = {
 
 type Config = {
     api: {
-        fileServerHits: number };
+        fileServerHits: number;
+        platform: string;
+    };
     db: {
         url: string;
         migrationConfig: MigrationConfig;
@@ -18,6 +20,7 @@ type Config = {
 export const config: Config = {
     api: {
         fileServerHits: 0,
+        platform: envOrThrow("PLATFORM")
     },
     db: {
         url: envOrThrow("DB_URL"),
