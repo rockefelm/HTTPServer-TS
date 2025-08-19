@@ -4,3 +4,4 @@
 *.sql
 /src/db/meta
 .env
+/src/db/migrations

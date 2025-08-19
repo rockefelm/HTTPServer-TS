@@ -3,9 +3,15 @@ import { handlerReadiness } from "./api/readiness.js";
 import { middlewareLogResponses, middlewareMetricsInc, errorMiddleWare } from "./api/middleware.js";
 import { handlerServerHits, handlerServerHitsReset } from "./api/serverhits.js";
 import { handlerValidateChirp } from "./api/validatechirp.js";
+import { migrate } from "drizzle-orm/postgres-js/migrator";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import { config } from "./config.js";
 
 const app = express();
 const PORT = 8080;
+const migrationClient = postgres(config.db.url, { max: 1 });
+await migrate(drizzle(migrationClient), config.db.migrationConfig);
 
 app.use(middlewareLogResponses);
 app.use(express.json());
