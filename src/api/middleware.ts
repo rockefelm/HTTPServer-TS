@@ -10,9 +10,7 @@ import {
 export function middlewareLogResponses(req: Request, res: Response, next: NextFunction) {
     res.on("finish", () => {
         const code = res.statusCode;
-        if (code !== 200) {
-            console.log(`[NON-OK] ${req.method} ${req.url} - Status: ${code}`);
-        }
+        console.log(`${req.method} ${req.url} - Status: ${code}`);
     });
     next();
 }
@@ -28,6 +26,7 @@ export function errorMiddleWare(
     res: Response,
     __: NextFunction,
     ) {
+
     let statusCode = 500;
     let message = "Something went wrong on our end";
 
