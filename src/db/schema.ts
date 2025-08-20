@@ -1,4 +1,3 @@
-import { ChildProcess } from "child_process";
 import { pgTable, timestamp, varchar, uuid, text } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -8,7 +7,13 @@ export const users = pgTable("users", {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
-  email: varchar("email", { length: 256 }).unique().notNull(),
+  email: varchar("email", { length: 256 })
+    .unique()
+    .notNull(),
+  hashedPwd: varchar("hashed_password", { length: 256})
+    .unique()
+    .notNull()
+    .default("unset"),
 });
 
 export const chirps = pgTable("chirps", {
@@ -27,3 +32,4 @@ export const chirps = pgTable("chirps", {
 
 export type NewUser = typeof users.$inferInsert;
 export type NewChirp = typeof chirps.$inferInsert;
+export type SecureUser = Omit<NewUser, "hashed_password">;

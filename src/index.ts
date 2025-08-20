@@ -9,6 +9,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { config } from "./config.js";
 import { handlerCreateUser } from "./api/createuser.js";
+import { loginHandler } from "./api/login.js"
 
 const app = express();
 const PORT = 8080;
@@ -40,6 +41,9 @@ app.get("/api/chirps", (req, res, next) => {
 app.post("/api/chirps", (req, res, next) => {
   Promise.resolve(handlerChirp(req, res)).catch(next);
 });
+app.post("/api/login", (req, res, next) => {
+  Promise.resolve(loginHandler(req, res)).catch(next);
+})
 
 app.use(errorMiddleWare);
 
