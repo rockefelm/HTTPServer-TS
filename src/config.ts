@@ -15,6 +15,9 @@ type Config = {
         url: string;
         migrationConfig: MigrationConfig;
     };
+    jwt: {
+      secret: string;
+    };
 };
 
 export const config: Config = {
@@ -25,6 +28,9 @@ export const config: Config = {
     db: {
         url: envOrThrow("DB_URL"),
         migrationConfig
+    },
+    jwt: {
+      secret: envOrThrow("JWT_SECRET")
     }
 }
 

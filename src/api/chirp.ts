@@ -1,11 +1,16 @@
 import {Request, Response} from "express";
-import { BadRequestError, NotFoundError } from "./errors.js";
+import { BadRequestError, NotFoundError, UserNotAuthenticatedError } from "./errors.js";
 import { createChirp, getAllChirps, getChirp } from "../db/queries/chirps.js";
 import { isValidUUID } from "./validate_uuid.js";
+import { getBearerToken, validateJWT } from "./auth.js";
+import { config } from "../config.js";
 
 export async function handlerChirp(req: Request, res: Response) {
     
+    const token = getBearerToken(req);
+    const validId = validateJWT(token, config.jwt.secret);    
     const maxChirpLength = 140;
+
     if (req.body.body.length > maxChirpLength) {
         throw new BadRequestError(`Chirp is too long. Max length is ${maxChirpLength}`);
     } 
@@ -24,7 +29,7 @@ export async function handlerChirp(req: Request, res: Response) {
     const filtered = words.join(" ");
     const chirp = await createChirp({
         body: filtered,
-        userId: req.body.userId,
+        userId: validId,
     });
     res.status(201).send(chirp);
 }
