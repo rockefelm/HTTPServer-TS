@@ -10,6 +10,8 @@ import postgres from "postgres";
 import { config } from "./config.js";
 import { handlerCreateUser } from "./api/createuser.js";
 import { loginHandler } from "./api/login.js"
+import { handlerRefreshToken } from "./api/refresh.js";
+import { handlerRevokeToken } from "./api/revoke.js";
 
 const app = express();
 const PORT = 8080;
@@ -43,7 +45,13 @@ app.post("/api/chirps", (req, res, next) => {
 });
 app.post("/api/login", (req, res, next) => {
   Promise.resolve(loginHandler(req, res)).catch(next);
-})
+});
+app.post("/api/refresh", (req, res, next) => {
+  Promise.resolve(handlerRefreshToken(req, res)).catch(next);
+});
+app.post("/api/revoke", (req, res, next) => {
+  Promise.resolve(handlerRevokeToken(req, res)).catch(next)
+});
 
 app.use(errorMiddleWare);
 

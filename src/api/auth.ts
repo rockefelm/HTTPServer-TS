@@ -1,8 +1,9 @@
 import bcrypt from "bcrypt";
 import { JwtPayload } from "jsonwebtoken";
 import jwt from "jsonwebtoken"
-import express from "express";
 import { Request } from "express";
+import { randomBytes } from "crypto";
+import { UserNotAuthenticatedError } from "./errors.js";
 
 export async function hashPassword(password: string): Promise<string> {
     const saltRounds = 10;
@@ -34,11 +35,11 @@ export function validateJWT(tokenString: string, secret: string): string {
             const id = verified.sub;
             return id;
         } else {
-            throw new Error("Invalid or expired token");
+            throw new UserNotAuthenticatedError("Invalid or expired token");
         }
 
     } catch (error) {
-        throw new Error("Invalid or expired token");
+        throw new UserNotAuthenticatedError("Invalid or expired token");
     }
     
 }
@@ -46,14 +47,19 @@ export function validateJWT(tokenString: string, secret: string): string {
 export function getBearerToken(req: Request): string {
     const authHeader = req.get("Authorization");
     if (!authHeader) {
-        throw new Error("missing Authorization header")
+        throw new UserNotAuthenticatedError("missing Authorization header")
     }
     const tokenParts = authHeader.split(" ");
     if (tokenParts.length < 2 || tokenParts[0] !== "Bearer") {
-        throw new Error("Invalid Authorization header");
+        throw new UserNotAuthenticatedError("Invalid Authorization header");
     }
 
     return tokenParts[1];
+}
+
+export function makeRefreshToken() {
+    const token = randomBytes(32).toString('hex');
+    return token;
 }
 
 type payload = Pick<JwtPayload, "iss" | "sub" | "iat" | "exp">;
