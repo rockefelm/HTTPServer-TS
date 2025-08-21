@@ -12,6 +12,7 @@ import { handlerCreateUser } from "./api/createuser.js";
 import { loginHandler } from "./api/login.js"
 import { handlerRefreshToken } from "./api/refresh.js";
 import { handlerRevokeToken } from "./api/revoke.js";
+import { handlerUpdateUser } from "./api/updateuser.js";
 
 const app = express();
 const PORT = 8080;
@@ -33,6 +34,9 @@ app.post("/admin/reset", (req, res, next) => {
 });
 app.post("/api/users", (req, res, next) => {
   Promise.resolve(handlerCreateUser(req, res)).catch(next);
+});
+app.put("/api/users", (req, res, next) => {
+  Promise.resolve(handlerUpdateUser(req, res)).catch(next);
 });
 app.get("/api/chirps/:chirpId", (req, res, next) => {
   Promise.resolve(handlerGetChirp(req, res)).catch(next);

@@ -1,7 +1,7 @@
 import { db } from "../index.js";
-import { NewUser, users } from "../schema.js";
+import { NewUser, users, SecureUser } from "../schema.js";
 import { eq } from "drizzle-orm";
-import { UserNotAuthenticatedError } from "../../api/errors.js";
+import { UserNotAuthenticatedError, NotFoundError } from "../../api/errors.js";
 import { getRefreshToken } from "./tokens.js";
 
 export async function createUser(user: NewUser) {
@@ -11,6 +11,26 @@ export async function createUser(user: NewUser) {
     .onConflictDoNothing()
     .returning();
   return result;
+}
+
+export async function updateUser(updates: { email: string, hashedPwd: string }, userId: string) {
+  await db
+    .update(users)
+    .set(updates)
+    .where(eq(users.id, userId))
+  return await getUserById(userId);
+}
+
+export async function getUserById(id: string) {
+  const [user] = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, id))
+    .limit(1)
+  if (!user) {
+    throw new NotFoundError("User not Found");
+  }
+  return user;
 }
 
 export async function resetUsers() {
