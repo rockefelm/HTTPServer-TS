@@ -9,7 +9,7 @@
     "start": "node ./dist/index.js",
     "dev": "npx tsc && node ./dist/index.js",
     "test": "vitest --run",
-    "generate": "npx run drizzle-kit generate"
+    "generate": "npx drizzle-kit generate"
   },
   "keywords": [],
   "author": "",

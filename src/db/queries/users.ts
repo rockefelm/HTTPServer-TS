@@ -60,3 +60,15 @@ export async function getUserFromRefreshToken(token: string) {
     .limit(1);
   return user;
 }
+
+export async function updateUserToRed(userId: string) {
+  const [updatedUser] = await db
+    .update(users)
+    .set({ isChirpyRed: true })
+    .where(eq(users.id, userId))
+    .returning();
+  if (updatedUser.isChirpyRed !== true) {
+    throw new Error("Unable to Upgrade for unkown reason.");
+  }
+  return updatedUser;
+}

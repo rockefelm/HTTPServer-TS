@@ -26,7 +26,7 @@ export async function loginHandler(req: Request, res: Response) {
         expiresAt: expiresAt,
         revokedAt: null
     });
-    const { hashedPwd, ...secureUser }: SecureUser = user;
+    const { hashedPwd, ...secureUser } = user;
     res.status(200).send({
         ...secureUser,
         token: token,

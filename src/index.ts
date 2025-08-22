@@ -13,6 +13,7 @@ import { loginHandler } from "./api/login.js"
 import { handlerRefreshToken } from "./api/refresh.js";
 import { handlerRevokeToken } from "./api/revoke.js";
 import { handlerUpdateUser } from "./api/updateuser.js";
+import { handlerUpgradeToRed } from "./api/upgradeuser.js";
 
 const app = express();
 const PORT = 8080;
@@ -58,6 +59,9 @@ app.post("/api/refresh", (req, res, next) => {
 });
 app.post("/api/revoke", (req, res, next) => {
   Promise.resolve(handlerRevokeToken(req, res)).catch(next)
+});
+app.post("/api/polka/webhooks", (req, res, next) => {
+  Promise.resolve(handlerUpgradeToRed(req, res)).catch(next);
 });
 
 app.use(errorMiddleWare);
