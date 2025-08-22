@@ -62,4 +62,16 @@ export function makeRefreshToken() {
     return token;
 }
 
+export function getAPIKey(req: Request) {
+    const authHeader = req.get("Authorization");
+    if (!authHeader) {
+        throw new UserNotAuthenticatedError("missing Authorization header")
+    }
+    const keyParts = authHeader.split(" ");
+    if (keyParts.length < 2 || keyParts[0] !== "ApiKey") {
+        throw new UserNotAuthenticatedError("Invalid Authorization header");
+    }
+    return keyParts[1];
+}
+
 type payload = Pick<JwtPayload, "iss" | "sub" | "iat" | "exp">;
