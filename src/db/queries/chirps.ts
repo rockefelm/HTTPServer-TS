@@ -35,3 +35,12 @@ export async function deleteChirp(chirpId: string) {
         .returning()
     return result;
 }
+
+export async function getChirpByUserId(userId: string) {
+    const result = await db
+        .select()
+        .from(chirps)
+        .where(eq(chirps.userId, userId))
+        .orderBy(sql`${chirps.createdAt} ASC`);
+    return result;
+}

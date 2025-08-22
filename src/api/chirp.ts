@@ -1,9 +1,10 @@
 import {Request, Response} from "express";
 import { BadRequestError, NotFoundError, UserForbiddenError, UserNotAuthenticatedError } from "./errors.js";
-import { createChirp, deleteChirp, getAllChirps, getChirp } from "../db/queries/chirps.js";
+import { createChirp, deleteChirp, getAllChirps, getChirp, getChirpByUserId } from "../db/queries/chirps.js";
 import { isValidUUID } from "./validate_uuid.js";
 import { getBearerToken, validateJWT } from "./auth.js";
 import { config } from "../config.js";
+import { getUserById } from "../db/queries/users.js";
 
 export async function handlerChirp(req: Request, res: Response) {
     
@@ -35,7 +36,17 @@ export async function handlerChirp(req: Request, res: Response) {
 }
 
 export async function handlerGetAllChirps(req: Request, res: Response) {
-    const chirps = await getAllChirps();
+    let authorId = "";
+    let authorIdQuery = req.query.authorId;
+    if (typeof authorIdQuery === "string") {
+        authorId = authorIdQuery;
+    }
+    let chirps;
+    if (authorId) {
+        chirps = await getChirpByUserId(authorId);
+    } else {
+        chirps = await getAllChirps();
+    }
     res.status(200).send(chirps);
 }
 
