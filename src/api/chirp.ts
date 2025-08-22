@@ -36,16 +36,27 @@ export async function handlerChirp(req: Request, res: Response) {
 }
 
 export async function handlerGetAllChirps(req: Request, res: Response) {
+    let sortOrder = "";
     let authorId = "";
     let authorIdQuery = req.query.authorId;
+    let sortOrderQuery = req.query.sort;
     if (typeof authorIdQuery === "string") {
         authorId = authorIdQuery;
     }
+    if (typeof sortOrderQuery === "string"
+        && (sortOrderQuery.toLowerCase() === ("asc") 
+        || sortOrderQuery.toLowerCase() === "desc"
+    )) {
+        sortOrder = sortOrderQuery.toUpperCase();
+    } else {
+        sortOrder = "ASC";
+    }
     let chirps;
     if (authorId) {
-        chirps = await getChirpByUserId(authorId);
+        chirps = await getChirpByUserId(authorId, sortOrder);
     } else {
-        chirps = await getAllChirps();
+
+        chirps = await getAllChirps(sortOrder);
     }
     res.status(200).send(chirps);
 }
